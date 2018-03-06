@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+  p Lets play #{title}
+  div.word
+  p Current word #{mask}
+  div.attempted
+  p Attempt #{attempted} of #{max}
+  div.status
+  p Status #{status}
+  div.form-group
+    form(method='POST' action='play')
+      input(type='text', name='letter')
+      input(type='submit', name='Submit')
+      input(type='submit', name='retry', value= 'Retry')

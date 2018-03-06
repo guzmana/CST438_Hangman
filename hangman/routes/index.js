@@ -2,19 +2,21 @@ var express = require('express');
 var fs = require("fs");
 var router = express.Router();
 
+/** Get a random word from the list of words*/
 function randomWord() {
-
   var words = fs.readFileSync("./hangmanwords.txt", "utf-8");
   var wordArray = words.split("\n")
   return wordArray[Math.floor(Math.random() * wordArray.length)].trim();
 }
 
+/** Enum of GameState's */
 var GameState = {
   PLAYING: 1,
   WON: 2,
   LOST: 3,
 };
 
+/** Class that contains game state */
 class Game {
   constructor() {
     this.word = randomWord().toLowerCase();
@@ -27,6 +29,7 @@ class Game {
     console.log(this.word);
   }
 
+  /** Return true if game has been won and false otherwise */
   isWon() {
     for (var maskBool of this.mask) {
       if(maskBool == false) {
@@ -36,11 +39,13 @@ class Game {
     return true;
   }
 
+  /** Return true if game has been lost and false otherwise */
   isLost() {
     return this.attempts > this.maxAttempts;
   }
 
   /**
+   * Update the mask used to print the discovered word
   * @param {string} letter
   */
   updateMask(letter) {
@@ -51,6 +56,7 @@ class Game {
     }
   }
 
+  /** Generate the masked word using the mask */
   generateMaskedWord() {
     var s = '';
     for (var i = 0; i < this.mask.length; i++) {
@@ -64,6 +70,7 @@ class Game {
   }
 
   /**
+   * Contains all the logic for playing a letter.
   * @param {string} letter
   */
   play(letter) {
@@ -102,6 +109,7 @@ class Game {
   }
 
   /**
+   * Determine if input is valid.
   * @param {string} input
   */
   isValid(input) {
@@ -133,10 +141,8 @@ router.get('/', function(req, res, next) {
 /* POST home page. */
 router.post('/play', function(req, res, next) {
   if(req.body.retry) {
-    console.log("RETRY");
     game = new Game();
   } else {
-    console.log("SUBMIT");
     game.play(req.body.letter);
   }
   res.redirect('/');

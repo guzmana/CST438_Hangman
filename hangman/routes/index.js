@@ -17,7 +17,7 @@ var GameState = {
 
 class Game {
   constructor() {
-    this.word = randomWord();
+    this.word = randomWord().toLowerCase();
     this.attempts = 1;
     this.maxAttempts = 8;
     this.mask = Array(this.word.length).fill(false);
@@ -69,6 +69,7 @@ class Game {
   play(letter) {
     if(this.state == GameState.PLAYING) {
       if(this.isValid(letter)) {
+        letter = letter.toLowerCase();
         if(this.word.includes(letter)) {
           this.updateMask(letter);
           this.played.push(letter);
